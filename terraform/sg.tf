@@ -1,7 +1,7 @@
 resource "aws_security_group" "db" {
   name = "db_sg"
   description = "Security group for RDS into VPC"
-    vpc_id = data.terraform_remote_state.geral.outputs.vpc_id
+    vpc_id = data.aws_vpc.ambrosia_serve_vpc.id
 
   tags = {
     Name = "db_sg"
