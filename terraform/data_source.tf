@@ -9,6 +9,6 @@ data "terraform_remote_state" "geral" {
   }
 }
 
-data "aws_vpc" "vpc" {
-  id = data.terraform_remote_state.geral.outputs.vpc_id
+data "aws_vpc" "ambrosia_serve_vpc" {
+  id = var.vpc_id
 }

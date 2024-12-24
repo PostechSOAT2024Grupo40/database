@@ -1,13 +1,9 @@
 resource "aws_rds_cluster" "cluster" {
   engine                              = "aurora-postgresql"
   cluster_identifier                  = "ambrosia-serve-cluster"
-  allocated_storage                   = 1
   backtrack_window                    = 0
   backup_retention_period             = 10
-  availability_zones                  = [
-    data.terraform_remote_state.geral.outputs.subnet_private_a_az,
-    data.terraform_remote_state.geral.outputs.subnet_private_b_az,
-  ]
+  availability_zones                  = ["us-east-1d", "us-east-1a"]
   copy_tags_to_snapshot               = true
   database_name                       = "ambrosia"
   db_cluster_parameter_group_name     = "default.aurora-postgresql16"
@@ -18,6 +14,7 @@ resource "aws_rds_cluster" "cluster" {
   engine_version                      = "16.1"
   iam_database_authentication_enabled = false
   master_username                     = "postgres"
+  master_password                     = "postgres"
   network_type                        = "IPV4"
   port                                = 5432
   preferred_backup_window             = "03:23-03:53"
@@ -43,7 +40,7 @@ resource "aws_rds_cluster_instance" "cluster_instance_writer" {
   cluster_identifier           = aws_rds_cluster.cluster.id
   engine                       = aws_rds_cluster.cluster.engine
   engine_version               = aws_rds_cluster.cluster.engine_version
-  availability_zone            = data.terraform_remote_state.geral.outputs.subnet_private_a_az
+  availability_zone            = "us-east-1a"
   copy_tags_to_snapshot        = true
   instance_class               = "db.r7g.large"
   db_parameter_group_name      = "default.aurora-postgresql16"
@@ -53,6 +50,6 @@ resource "aws_rds_cluster_instance" "cluster_instance_writer" {
   publicly_accessible          = false
 
   tags = {
-    Name ="instance-1"
+    Name = "instance-1"
   }
 }
